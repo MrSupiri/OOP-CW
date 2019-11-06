@@ -34,4 +34,13 @@ public class VehicleModel {
     public void setModel(String model) {
         this.model = model;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "type='" + type + '\'' +
+                ", make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                '}';
+    }
 }

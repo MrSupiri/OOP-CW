@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
-public abstract class Vehicle {
+public abstract class Vehicle implements Comparable<Vehicle> {
     protected String plateNumber;
     protected BigDecimal costPerDay;
     protected VehicleModel vehicleModel;
@@ -100,6 +100,11 @@ public abstract class Vehicle {
     public BigDecimal getRentValue(Date pickUpDate, Date dropOffDate){
         // TODO: Find the days between pickUpDate and dropOffDate and return days * costPerDay
         return null;
+    }
+
+    @Override
+    public int compareTo(Vehicle vehicle) {
+        return this.vehicleModel.getModel().compareTo(vehicle.getVehicleModel().getMake());
     }
 
     @Override

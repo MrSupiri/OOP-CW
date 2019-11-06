@@ -41,16 +41,16 @@ public class Car extends Vehicle {
     @Override
     public String toString() {
         return "Car{" +
-                "doors=" + doors +
-                ", airConditioned=" + airConditioned +
-                ", trunkCapacity=" + trunkCapacity +
-                ", plateNumber='" + plateNumber + '\'' +
+                "plateNumber='" + plateNumber + '\'' +
                 ", costPerDay=" + costPerDay +
                 ", vehicleModel=" + vehicleModel +
                 ", mileage=" + mileage +
                 ", engineCapacity=" + engineCapacity +
                 ", seats=" + seats +
                 ", transmission='" + transmission + '\'' +
+                ", doors=" + doors +
+                ", airConditioned=" + airConditioned +
+                ", trunkCapacity=" + trunkCapacity +
                 '}';
     }
 }
