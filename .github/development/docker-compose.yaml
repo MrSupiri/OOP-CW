@@ -1,0 +1,14 @@
+version: "3"
+services:
+  westminster_mongodb:
+      image: mongo
+      restart: always
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+        MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      volumes:
+        - westminster_mongodb:/data/db
+      ports:
+        - '27017-27019:27017-27019'
+volumes:
+  westminster_mongodb:
