@@ -1,6 +1,9 @@
 package Views;
 import Controllers.WestminsterRentalVehicleManager;
+import Models.Bike;
+import Models.Car;
 import Models.Vehicle;
+import Models.VehicleModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -8,8 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleApp {
-    private static ArrayList<Vehicle> vehicles = new ArrayList<>();
-    private static String sessionToken;
+    private static String sessionToken = "Yi0jadyJTTp%@KZ1PEB8d3oK9d!yYv6Y^$tTv&ZnCm2kcaagAZ";
     public static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -55,6 +57,82 @@ public class ConsoleApp {
 
     private static void logOut(){
         sessionToken = null;
+    }
+
+    private static Vehicle promptForVehicleInfo(){
+        ArrayList<String> vTypes = new ArrayList<>();
+        vTypes.add("Bike");
+        vTypes.add("Car");
+
+        String vehicleType = ConsoleApp.promptForENUM(
+                "\tEnter Vehicle Type: ",
+                "Invalid Vehicle Type",
+                vTypes
+        );
+
+        System.out.print("\tEnter the Plate Number of the Vehicle: ");
+        String plateNumber = ConsoleApp.sc.nextLine();
+        BigDecimal costPerDay = ConsoleApp.promptForBigDecimal(
+                "\tEnter the Price of the Vehicle for day: ",
+                "Invalid Price !"
+        );
+        System.out.print("\tEnter the Type of the Vehicle: ");
+        String type = ConsoleApp.sc.nextLine();
+        System.out.print("\tEnter the Maker of the Vehicle: ");
+        String make = ConsoleApp.sc.nextLine();
+        System.out.print("\tEnter the Model of the Vehicle: ");
+        String model = ConsoleApp.sc.nextLine();
+        VehicleModel vehicleModel = new VehicleModel(type, make, model);
+        double mileage = ConsoleApp.promptForDouble(
+                "\tEnter the Mileage of the Vehicle: ",
+                "Invalid mileage !"
+        );
+        double engineCapacity = ConsoleApp.promptForPositiveDouble(
+                "\tEnter the Engine Capacity of the Vehicle: ",
+                "Invalid Engine Capacity !"
+        );
+
+        int seats = ConsoleApp.promptForPositiveInt(
+                "\tEnter the Number of Seats in the Vehicle: ",
+                "Invalid Number of Seats !"
+        );
+
+        System.out.print("\tEnter the Transmission type of the Vehicle: ");
+        String transmission = ConsoleApp.sc.nextLine();
+
+        if(vehicleType.equals("Bike")){
+            double wheelSize = ConsoleApp.promptForDouble(
+                    "\tEnter the WheelSize of the Bike: ",
+                    "Invalid wheelSize !"
+            );
+
+            boolean sideCar = ConsoleApp.promptForBoolean(
+                    "\tDoes this bike has a side car ? : ",
+                    "Invalid Answer ! (Yes/No)"
+            );
+            int numOfHelmets = ConsoleApp.promptForPositiveInt(
+                    "\tEnter the Number of Helmets given with the Bike: ",
+                    "Invalid Number of Helmets !"
+            );
+            return new Bike(plateNumber, costPerDay, vehicleModel, mileage, engineCapacity, seats, transmission, wheelSize, sideCar, numOfHelmets);
+        }
+        else{
+            int doors = ConsoleApp.promptForPositiveInt(
+                    "\tEnter the Number of doors in the Car: ",
+                    "Invalid Number of doors !"
+            );
+
+            boolean airConditioned = ConsoleApp.promptForBoolean(
+                    "\tDoes this car has a Air Condition ? : ",
+                    "Invalid Answer ! (Yes/No)"
+            );
+
+            int trunkCapacity = ConsoleApp.promptForPositiveInt(
+                    "\tEnter the Number of luggage fits in trunk of the Car: ",
+                    "Invalid Number of luggages !"
+            );
+            return new Car(plateNumber, costPerDay, vehicleModel, mileage, engineCapacity, seats, transmission, doors, airConditioned, trunkCapacity);
+        }
     }
 
     private static void displayMenu(){

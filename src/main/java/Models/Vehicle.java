@@ -91,10 +91,8 @@ public abstract class Vehicle implements Comparable<Vehicle> {
     }
 
     public boolean rentVehicle(Date pickUpDate, Date dropOffDate){
-        if (!isAvailable())
-            return false;
+        return isAvailable();
         // TODO: Update the availability
-        return true;
     }
 
     public BigDecimal getRentValue(Date pickUpDate, Date dropOffDate){
