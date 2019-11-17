@@ -108,12 +108,12 @@ public class DatabaseController {
                 .append("seats", (int) Math.round((double) data.get("seats")))
                 .append("transmission", data.get("transmission"));
 
-        if (((String) data.get("type")).equalsIgnoreCase("car")) {
+        if (data.containsKey("doors")) {
             doc.append("doors", (int) Math.round((double) data.get("doors")))
                     .append("airConditioned", data.get("airConditioned"))
                     .append("trunkCapacity", (int) Math.round((double) data.get("trunkCapacity")))
                     .append("type", "car");
-        } else if (((String) data.get("type")).equalsIgnoreCase("bike")) {
+        } else if (data.containsKey("wheelSize")) {
             doc.append("wheelSize", data.get("wheelSize"))
                     .append("sideCar", data.get("sideCar"))
                     .append("numOfHelmets", (int) Math.round((double) data.get("numOfHelmets")))

@@ -32,7 +32,7 @@ public class API {
 
             before("/vehicle/*", (request, response) -> {
                 if (!request.headers().contains("Authorization") || !request.headers("Authorization").equals(JWT)) {
-                    halt(401, "Invalid Token!");
+                    halt(401, new Gson().toJson(new ResponseView(null, "Invalid Token!")));
                 }
             });
             path("/vehicle", () -> {
@@ -86,8 +86,12 @@ public class API {
         response.type("application/json");
         try {
             Map data = gson.fromJson(request.body(), Map.class);
+            if (data == null){
+                throw new InvalidParameterException();
+            }
+            System.out.println(data);
             databaseController.deleteVehicle((String) data.get("plateNumber"));
-            return new ResponseView("Vehicle was deleted", null);
+            return new ResponseView(databaseController.numOfFreeParkingSlots(), null);
         } catch (InvalidParameterException e) {
             response.status(404);
             return new ResponseView(null, "Vehicle not found");

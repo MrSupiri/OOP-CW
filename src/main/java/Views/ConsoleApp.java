@@ -1,4 +1,6 @@
 package Views;
+
+import Controllers.RentalVehicleManager;
 import Controllers.WestminsterRentalVehicleManager;
 import Models.Bike;
 import Models.Car;
@@ -10,20 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+@SuppressWarnings("SameParameterValue")
 public class ConsoleApp {
-    private static String sessionToken = "Yi0jadyJTTp%@KZ1PEB8d3oK9d!yYv6Y^$tTv&ZnCm2kcaagAZ";
-    public static Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
+
 
     public static void main(String[] args) {
         // TODO: Initiate the Manager CLI
-
+        RentalVehicleManager manager = new WestminsterRentalVehicleManager("123", "Test");
+//        manager.addVehicle(new Bike("sdfsdfsf", new BigDecimal(234.34), new VehicleModel("sdfs", "Sfdsd", "Sd"), 123.2, 234, 3, "something", 3, false, 2));
         displayMenu();
-        WestminsterRentalVehicleManager manager = new WestminsterRentalVehicleManager("123", "Test");
         int option = promptForInt(">>> ", "Invalid Option");
         while (option != -1){
             switch (option){
                 case 1:
-                    manager.addVehicle();
+                    manager.addVehicle(promptForVehicleInfo());
                     break;
                 case 2:
                     System.out.print("Enter the Plate Number: ");
@@ -46,17 +49,20 @@ public class ConsoleApp {
         System.out.println("\nExisting Gracefully");
     }
 
-    private static boolean login(String username, String password){
-        // TODO: Match the username and password with database, update the sessionToken and return true if authorized
-        return false;
-    }
 
     private static void launchGUI(){
         // TODO: Start the Electron Binary
     }
 
-    private static void logOut(){
-        sessionToken = null;
+    private static void displayMenu(){
+        System.out.println();
+        System.out.println(" +---------------------+ ");
+        System.out.println(" | 1 | Added Vehicle   |");
+        System.out.println(" | 2 | Delete Vehicle  |");
+        System.out.println(" | 3 | Print Vehicle   |");
+        System.out.println(" | 4 | Save Vehicle    |");
+        System.out.println(" |-1 | Exit            |");
+        System.out.println(" +---------------------+ ");
     }
 
     private static Vehicle promptForVehicleInfo(){
@@ -135,24 +141,13 @@ public class ConsoleApp {
         }
     }
 
-    private static void displayMenu(){
-        System.out.println();
-        System.out.println(" +---------------------+ ");
-        System.out.println(" | 1 | Added Vehicle   |");
-        System.out.println(" | 2 | Delete Vehicle  |");
-        System.out.println(" | 3 | Print Vehicle   |");
-        System.out.println(" | 4 | Save Vehicle    |");
-        System.out.println(" |-1 | Exit            |");
-        System.out.println(" +---------------------+ ");
-    }
-
     /**
      * prompt user till the he enters a Integer Value
      * @param msg - message that keep promoting to user
      * @param err - error given when user enters a invalid number
      * @return - number user input
      */
-    public static int promptForInt(String msg, String err) {
+    private static int promptForInt(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextInt()) {
             System.out.printf("\n\t\t%s\n\n", err);
@@ -164,7 +159,7 @@ public class ConsoleApp {
         return value;
     }
 
-    public static int promptForPositiveInt(String msg, String error) {
+    private static int promptForPositiveInt(String msg, String error) {
         int value = promptForInt(msg, error);
         while(value < 0){
             System.out.printf("\n\t%s\n\n", error);
@@ -173,7 +168,7 @@ public class ConsoleApp {
         return value;
     }
 
-    public static BigDecimal promptForBigDecimal(String msg, String err) {
+    private static BigDecimal promptForBigDecimal(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextBigDecimal()) {
             System.out.printf("\n\t\t%s\n\n", err);
@@ -185,7 +180,7 @@ public class ConsoleApp {
         return value;
     }
 
-    public static double promptForDouble(String msg, String err) {
+    private static double promptForDouble(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextDouble()) {
             System.out.printf("\n\t\t%s\n\n", err);
@@ -197,7 +192,7 @@ public class ConsoleApp {
         return value;
     }
 
-    public static double promptForPositiveDouble(String msg, String err) {
+    private static double promptForPositiveDouble(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextDouble()) {
             System.out.printf("\n\t\t%s\n\n", err);
@@ -213,7 +208,7 @@ public class ConsoleApp {
         return value;
     }
 
-    public static String promptForENUM(String msg, String err, List<String> types) {
+    private static String promptForENUM(String msg, String err, List<String> types) {
         System.out.print(msg);
         String type = sc.nextLine().toLowerCase();
         while (true) {
@@ -227,7 +222,7 @@ public class ConsoleApp {
         }
     }
 
-    public static boolean promptForBoolean(String msg, String err) {
+    private static boolean promptForBoolean(String msg, String err) {
         System.out.print(msg);
         String value = sc.nextLine().toLowerCase();
         while (!value.equals("yes") && !value.equals("no") ){

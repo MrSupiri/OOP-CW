@@ -3,7 +3,6 @@ package API;
 public class ResponseView {
     private Object success = null;
     private Object error = null;
-    private Integer value = null;
 
     public ResponseView(Object success, Object error) {
         this.success = success;
@@ -18,7 +17,4 @@ public class ResponseView {
         return error;
     }
 
-    public Integer getValue() {
-        return value;
-    }
 }
