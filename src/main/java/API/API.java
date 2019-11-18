@@ -8,6 +8,7 @@ import spark.Request;
 import spark.Response;
 
 import java.security.InvalidParameterException;
+import java.text.ParseException;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -28,20 +29,40 @@ public class API {
         MongoDatabase database = mongoClient.getDatabase(System.getenv("MONGODB_DATABASE"));
         databaseController = new DatabaseController(database);
 
+        options("/*", (request, response) -> {
+            String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+            if (accessControlRequestHeaders != null) {
+                response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+            }
+            String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+            if (accessControlRequestMethod != null) {
+                response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+            }
+            return "OK";
+        });
+
+        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
         path("/api", () -> {
 
-            before("/vehicle/*", (request, response) -> {
+            before("/admin/*", (request, response) -> {
                 if (!request.headers().contains("Authorization") || !request.headers("Authorization").equals(JWT)) {
                     halt(401, new Gson().toJson(new ResponseView(null, "Invalid Token!")));
                 }
+                response.header("Access-Control-Allow-Origin", "*");
+                response.header("Access-Control-Allow-Methods", "GET");
             });
-            path("/vehicle", () -> {
-                get("/", "application/json", (request, response) -> getVehicles(request, response), gson::toJson);
-                post("/", "application/json", (request, response) -> addVehicles(request, response), gson::toJson);
-                put("/", "application/json", (request, response) -> addVehicles(request, response), gson::toJson);
-                patch("/", "application/json", (request, response) -> updateVehicle(request, response), gson::toJson);
-                delete("/", "application/json", (request, response) -> deleteVehicle(request, response), gson::toJson);
+            path("/admin", () -> {
+                get("/vehicle/", "application/json", (request, response) -> getVehicles(request, response), gson::toJson);
+                post("/vehicle/", "application/json", (request, response) -> addVehicle(request, response), gson::toJson);
+                put("/vehicle/", "application/json", (request, response) -> addVehicle(request, response), gson::toJson);
+                patch("/vehicle/", "application/json", (request, response) -> updateVehicle(request, response), gson::toJson);
+                delete("/vehicle/", "application/json", (request, response) -> deleteVehicle(request, response), gson::toJson);
             });
+            path("/user", () -> {
+                post("/vehicle/", "application/json", (request, response) -> getAvailableVehicles(request, response), gson::toJson);
+                post("/book/", "application/json", (request, response) -> bookVehicle(request, response), gson::toJson);
+            });
+
         });
     }
 
@@ -56,7 +77,7 @@ public class API {
         }
     }
 
-    private static ResponseView addVehicles(Request request, Response response) {
+    private static ResponseView addVehicle(Request request, Response response) {
         response.type("application/json");
         try {
             Map data = gson.fromJson(request.body(), Map.class);
@@ -86,7 +107,7 @@ public class API {
         response.type("application/json");
         try {
             Map data = gson.fromJson(request.body(), Map.class);
-            if (data == null){
+            if (data == null) {
                 throw new InvalidParameterException();
             }
             System.out.println(data);
@@ -112,8 +133,50 @@ public class API {
     private static Object updateVehicle(Request request, Response response) {
         response.type("application/json");
         deleteVehicle(request, response);
-        return addVehicles(request, response);
+        return addVehicle(request, response);
     }
 
+    private static ResponseView bookVehicle(Request request, Response response) {
+        response.type("application/json");
+        try {
+            Map data = gson.fromJson(request.body(), Map.class);
+            String plateNumber =  (String) data.get("plateNumber");
+            String startDate = (String) data.get("pickupDate");
+            String endDate = (String) data.get("dropOffDate");
+            if (databaseController.isVehicleAvailable(plateNumber, startDate, endDate)) {
+                databaseController.bookVehicle(data);
+                return new ResponseView("Reservation was successful", null);
+            } else {
+                return new ResponseView(null, "Vehicle is already booked in this time frame");
+            }
+        } catch (NullPointerException e) {
+            response.status(400);
+            return new ResponseView(null, "Request is missing some key data");
+        } catch (ClassCastException | ParseException e) {
+            response.status(400);
+            e.printStackTrace();
+            return new ResponseView(null, "Data Type Mismatch");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.status(500);
+            return new ResponseView(null, "Something went Wrong");
+        }
+    }
 
+    private static Object getAvailableVehicles(Request request, Response response) {
+        response.type("application/json");
+        try {
+            Map data = gson.fromJson(request.body(), Map.class);
+            String startDate = (String) data.get("startDate");
+            String endDate = (String) data.get("endDate");
+            return databaseController.getAvailableVehicles(startDate, endDate);
+        } catch (NullPointerException e) {
+            response.status(400);
+            return new ResponseView(null, "Request is missing some key data");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.status(500);
+            return new ResponseView(null, "Something went Wrong");
+        }
+    }
 }
