@@ -8,7 +8,6 @@ import spark.Request;
 import spark.Response;
 
 import java.security.InvalidParameterException;
-import java.text.ParseException;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -152,7 +151,7 @@ public class API {
         } catch (NullPointerException e) {
             response.status(400);
             return new ResponseView(null, "Request is missing some key data");
-        } catch (ClassCastException | ParseException e) {
+        } catch (ClassCastException e) {
             response.status(400);
             e.printStackTrace();
             return new ResponseView(null, "Data Type Mismatch");
@@ -167,9 +166,9 @@ public class API {
         response.type("application/json");
         try {
             Map data = gson.fromJson(request.body(), Map.class);
-            String startDate = (String) data.get("startDate");
-            String endDate = (String) data.get("endDate");
-            return databaseController.getAvailableVehicles(startDate, endDate);
+            String pickUpDate = (String) data.get("pickUpDate");
+            String dropOffDate = (String) data.get("dropOffDate");
+            return databaseController.getAvailableVehicles(pickUpDate, dropOffDate);
         } catch (NullPointerException e) {
             response.status(400);
             return new ResponseView(null, "Request is missing some key data");

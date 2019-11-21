@@ -22,13 +22,11 @@ class VehicleList extends Component {
 
     }
     componentDidMount() {
-        axios.post('http://localhost:4567/api/user/vehicle/', { startDate: new Date(), endDate: new Date() }, { headers: { 'Content-Type': 'application/json' } })
+        axios.post('http://localhost:4567/api/user/vehicle/', { pickUpDate: new Date(), dropOffDate: new Date() }, { headers: { 'Content-Type': 'application/json' } })
             .then((res) => this.setState({ data: res.data }))
     }
 
     render() {
-
-        console.log(this.state.data)
         return (
             <div>
                 <Paper >
@@ -49,7 +47,6 @@ class VehicleList extends Component {
                         </TableHead>
                         <TableBody>
                             {this.state.data.map((row) => {
-                                console.log(this.state.data)
                                 return (
                                     <TableRow key={row.plateNumber}>
                                         <TableCell component="th" scope="row">

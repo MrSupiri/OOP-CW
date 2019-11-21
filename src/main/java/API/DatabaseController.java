@@ -13,9 +13,6 @@ import org.bson.types.Decimal128;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -140,7 +137,7 @@ public class DatabaseController {
         return doc;
     }
 
-    public void bookVehicle(Map data) throws ParseException {
+    public void bookVehicle(Map data){
         Document document = new Document("plateNumber",  data.get("plateNumber"))
                 .append("firstName",  data.get("firstName"))
                 .append("lastName",  data.get("lastName"))
@@ -150,27 +147,28 @@ public class DatabaseController {
         reservationCollection.insertOne(document);
     }
 
-    public boolean isVehicleAvailable(String plateNumber, String pickupDate, String dropOffDate) throws ParseException {
-        return reservationCollection.count(and(
-                eq("vehicle.plateNumber", plateNumber),
+    public boolean isVehicleAvailable(String plateNumber, String pickupDate, String dropOffDate){
+        Date pickUp = Date.from(Instant.from(OffsetDateTime.parse(pickupDate, timeFormatter)));
+        Date dropOff = Date.from(Instant.from(OffsetDateTime.parse(dropOffDate, timeFormatter)));
+        System.out.println(pickUp);
+        System.out.println(dropOff);
+        int count = (int) reservationCollection.count(and(
+                eq("plateNumber", plateNumber),
                 or(
-                        and(lte("pickupDate", Date.from(Instant.from(OffsetDateTime.parse(pickupDate, timeFormatter)))), gt("pickupDate", Date.from(Instant.from(OffsetDateTime.parse(pickupDate, timeFormatter))))),
-                        and(lt("pickupDate", Date.from(Instant.from(OffsetDateTime.parse(dropOffDate, timeFormatter)))), gte("pickupDate", Date.from(Instant.from(OffsetDateTime.parse(dropOffDate, timeFormatter))))),
-                        and(gt("pickupDate", Date.from(Instant.from(OffsetDateTime.parse(pickupDate, timeFormatter)))), lt("pickupDate", Date.from(Instant.from(OffsetDateTime.parse(dropOffDate, timeFormatter)))))
+                        gt("pickupDate", dropOff),
+                        lt("dropOff", pickUp)
                 )
-        )) == 0;
+        ));
+        System.out.println(count);
+        return count ==  0;
     }
 
-    public ArrayList<Vehicle> getAvailableVehicles(String pickupDate, String dropOffDate) throws ParseException {
+    public ArrayList<Vehicle> getAvailableVehicles(String pickupDate, String dropOffDate){
         ArrayList<Vehicle> items = new ArrayList<>();
         vehicleCollection.find().forEach((Block<Document>) document -> {
             Vehicle vehicle = deserializeVehicle(document);
-            try {
-                if(isVehicleAvailable(vehicle.getPlateNumber(), pickupDate, dropOffDate)) {
-                    items.add(vehicle);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            if(isVehicleAvailable(vehicle.getPlateNumber(), pickupDate, dropOffDate)) {
+                items.add(vehicle);
             }
         });
         return items;
