@@ -10,8 +10,10 @@ const useStyles = makeStyles({
         padding: "0 20px 0 20px",
         justifyContent: "center",
     },
-    debug: {
-        border: "1px solid black;",
+    sectionWrapper: {
+        background: "#fff",
+        padding: "10px 0 10px 15px",
+        // border: "1px solid black;",
     },
     vehicleModel: {
         marginTop: "0px",
@@ -37,10 +39,10 @@ export default function VehicleCard(props) {
     };
     return (
         <Grid container className={classes.root}>
-            <Grid item xs={2}>
+            <Grid item  className={classes.sectionWrapper} xs={2}>
                 <img src={`https://source.unsplash.com/215x150/?${props.vehicleModel.type}`} alt={props.vehicleModel.type} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item className={classes.sectionWrapper} xs={4}>
                 <span>{props.vehicleModel.type}</span>
                 <h2 className={classes.vehicleModel} >{props.vehicleModel.make} {props.vehicleModel.model}</h2>
                 <Grid className={classes.featureWrapper} container>
@@ -84,10 +86,10 @@ export default function VehicleCard(props) {
 
                 </Grid>
             </Grid>
-            <Grid item className={classes.rentWrapper} xs={2}>
+            <Grid item className={classes.sectionWrapper} xs={2}>
                 <span>Price for {props.days} day</span>
                 <h2>EUR {(props.costPerDay * props.days).toFixed(2) }</h2>
-                <Button className={classes.rentButton} onClick={() => null} color="secondary" variant="contained">Rent</Button>
+                <Button className={classes.rentButton} onClick={() => null} color="secondary" variant="contained">Rent Now</Button>
             </Grid>
         </Grid>
     );
