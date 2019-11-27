@@ -60,9 +60,9 @@ export default function BookForm(props) {
             dropOffDate: dropOffDate,
             plateNumber: props.selectedVehicle,
         }, { headers: { 'Content-Type': 'application/json' } })
-            .then((res) => enqueueSnackbar(res.data.success, {variant: "success"}))
-            .catch((res) => enqueueSnackbar(res.data.error, {variant: "error"}))
-    }
+            .then((res) => res.data ? enqueueSnackbar(res.data.success, {variant: "success"}) : enqueueSnackbar("Backend is offline", {variant: "error"}))
+            .catch((res) => res.data ? enqueueSnackbar(res.data.error, {variant: "error"}) : enqueueSnackbar("Backend is offline", {variant: "error"}))
+    };
 
     return (
         <Container component="main" maxWidth="xs">

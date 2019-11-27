@@ -8,19 +8,19 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import BookForm from "../components/BookForm"
+import VehicleCard from "../components/VehicleCard";
 
 
 class VehicleList extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             data: [],
             selectedVehicle: null,
-        }
-
-
+        };
     }
+
     componentDidMount() {
         axios.post('http://localhost:4567/api/user/vehicle/', { pickUpDate: new Date(), dropOffDate: new Date() }, { headers: { 'Content-Type': 'application/json' } })
             .then((res) => this.setState({ data: res.data }))
@@ -68,6 +68,11 @@ class VehicleList extends Component {
                     </Table>
                 </Paper>
                 {this.state.selectedVehicle && <BookForm selectedVehicle={this.state.selectedVehicle} />}
+                {this.state.data.map((vehicle) => {
+                    return(
+                        <VehicleCard {...vehicle} days={1}/>
+                    )
+                })}
             </div>
         );
     }

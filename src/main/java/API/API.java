@@ -8,6 +8,7 @@ import spark.Request;
 import spark.Response;
 
 import java.security.InvalidParameterException;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -151,10 +152,10 @@ public class API {
         } catch (NullPointerException e) {
             response.status(400);
             return new ResponseView(null, "Request is missing some key data");
-        } catch (ClassCastException e) {
+        } catch (ClassCastException | DateTimeParseException e) {
             response.status(400);
             e.printStackTrace();
-            return new ResponseView(null, "Data Type Mismatch");
+            return new ResponseView(null, "Request contains illegal data type");
         } catch (Exception e) {
             e.printStackTrace();
             response.status(500);
