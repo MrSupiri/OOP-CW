@@ -48,8 +48,6 @@ public class API {
                 if (!request.headers().contains("Authorization") || !request.headers("Authorization").equals(JWT)) {
                     halt(401, new Gson().toJson(new ResponseView(null, "Invalid Token!")));
                 }
-                response.header("Access-Control-Allow-Origin", "*");
-                response.header("Access-Control-Allow-Methods", "GET");
             });
             path("/admin", () -> {
                 get("/vehicle/", "application/json", (request, response) -> getVehicles(request, response), gson::toJson);
@@ -140,13 +138,14 @@ public class API {
         response.type("application/json");
         try {
             Map data = gson.fromJson(request.body(), Map.class);
-            String plateNumber =  (String) data.get("plateNumber");
+            String plateNumber = (String) data.get("plateNumber");
             String startDate = (String) data.get("pickupDate");
             String endDate = (String) data.get("dropOffDate");
             if (databaseController.isVehicleAvailable(plateNumber, startDate, endDate)) {
                 databaseController.bookVehicle(data);
                 return new ResponseView("Reservation was successful", null);
             } else {
+                response.status(400);
                 return new ResponseView(null, "Vehicle is already booked in this time frame");
             }
         } catch (NullPointerException e) {
@@ -154,7 +153,6 @@ public class API {
             return new ResponseView(null, "Request is missing some key data");
         } catch (ClassCastException | DateTimeParseException e) {
             response.status(400);
-            e.printStackTrace();
             return new ResponseView(null, "Request contains illegal data type");
         } catch (Exception e) {
             e.printStackTrace();

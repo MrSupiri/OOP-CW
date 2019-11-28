@@ -7,6 +7,7 @@ import Models.Car;
 import Models.Vehicle;
 import Models.VehicleModel;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ public class ConsoleApp {
     public static void main(String[] args) {
         // TODO: Initiate the Manager CLI
         RentalVehicleManager manager = new WestminsterRentalVehicleManager("123", "Test");
-//        manager.addVehicle(new Bike("sdfsdfsf", new BigDecimal(234.34), new VehicleModel("sdfs", "Sfdsd", "Sd"), 123.2, 234, 3, "something", 3, false, 2));
         displayMenu();
         int option = promptForInt(">>> ", "Invalid Option");
         while (option != -1){
@@ -38,6 +38,14 @@ public class ConsoleApp {
                     break;
                 case 4:
                     manager.save();
+                    break;
+                case 5:
+                    System.out.println("Opening React App on port 3000");
+                    try {
+                        Runtime.getRuntime().exec("xdg-open localhost:3000");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Invalid Option");
@@ -61,6 +69,7 @@ public class ConsoleApp {
         System.out.println(" | 2 | Delete Vehicle  |");
         System.out.println(" | 3 | Print Vehicle   |");
         System.out.println(" | 4 | Save Vehicle    |");
+        System.out.println(" | 5 | Launch  GUI     |");
         System.out.println(" |-1 | Exit            |");
         System.out.println(" +---------------------+ ");
     }

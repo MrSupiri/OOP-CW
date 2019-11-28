@@ -150,17 +150,13 @@ public class DatabaseController {
     public boolean isVehicleAvailable(String plateNumber, String pickupDate, String dropOffDate){
         Date pickUp = Date.from(Instant.from(OffsetDateTime.parse(pickupDate, timeFormatter)));
         Date dropOff = Date.from(Instant.from(OffsetDateTime.parse(dropOffDate, timeFormatter)));
-        System.out.println(pickUp);
-        System.out.println(dropOff);
-        int count = (int) reservationCollection.count(and(
+        return (int) reservationCollection.count(and(
                 eq("plateNumber", plateNumber),
-                or(
-                        gt("pickupDate", dropOff),
-                        lt("dropOff", pickUp)
+                and(
+                        lt("pickupDate", dropOff),
+                        gte("dropOffDate", pickUp)
                 )
-        ));
-        System.out.println(count);
-        return count ==  0;
+        ))  ==  0;
     }
 
     public ArrayList<Vehicle> getAvailableVehicles(String pickupDate, String dropOffDate){

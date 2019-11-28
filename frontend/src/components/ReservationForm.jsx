@@ -34,8 +34,12 @@ export default function ReservationForm(props) {
             dropOffDate: props.dropOffDate,
             plateNumber: props.vehicle.plateNumber,
         }, { headers: { 'Content-Type': 'application/json' } })
-            .then((res) => res.data ? enqueueSnackbar(res.data.success, {variant: "success"}) : enqueueSnackbar("Backend is offline", {variant: "error"}))
-            .catch((res) => res.data ? enqueueSnackbar(res.data.error, {variant: "error"}) : enqueueSnackbar("Backend is offline", {variant: "error"}))
+            .then((res) => {
+                res.data ? enqueueSnackbar(res.data.success, {variant: "success"}) : enqueueSnackbar("Backend is offline", {variant: "error"})
+            })
+            .catch((err) => {
+                err.response.data ? enqueueSnackbar(err.response.data.error, {variant: "error"}) : enqueueSnackbar("Backend is offline", {variant: "error"})
+            });
         props.toggleDialog();
     };
 

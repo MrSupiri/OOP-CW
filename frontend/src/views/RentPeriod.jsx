@@ -30,8 +30,10 @@ export default function BookForm(props) {
     };
 
     const classes = useStyles();
-    const [pickupDate, setPickUpDate] = useState(new Date());
-    const [dropOffDate, setDropOffDate] = useState(new Date().addDays(1));
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const [pickupDate, setPickUpDate] = useState(today);
+    const [dropOffDate, setDropOffDate] = useState(today.addDays(1));
 
     return (
         <Container component="main" maxWidth="xs">
