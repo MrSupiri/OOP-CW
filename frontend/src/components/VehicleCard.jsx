@@ -16,7 +16,7 @@ const useStyles = makeStyles({
         // border: "1px solid black;",
     },
     vehicleModel: {
-        marginTop: "0px",
+        margin: "0px",
     },
     rentButton: {
         background: "#00c853",
@@ -25,6 +25,9 @@ const useStyles = makeStyles({
     },
     rentWrapper: {
         textAlign: "right",
+    },
+    featureWrapper: {
+        marginTop: "10px",
     }
 });
 
@@ -34,17 +37,19 @@ export default function VehicleCard(props) {
     const classes = useStyles();
 
     // https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+    // eslint-disable-next-line
     String.prototype.toProperCase = function () {
         return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     };
     return (
         <Grid container className={classes.root}>
-            <Grid item  className={classes.sectionWrapper} xs={2}>
+            <Grid item className={classes.sectionWrapper} xs={2}>
                 <img src={`https://source.unsplash.com/215x150/?${props.vehicleModel.type}`} alt={props.vehicleModel.type} />
             </Grid>
             <Grid item className={classes.sectionWrapper} xs={4}>
                 <span>{props.vehicleModel.type}</span>
                 <h2 className={classes.vehicleModel} >{props.vehicleModel.make} {props.vehicleModel.model}</h2>
+                <span>{props.plateNumber}</span>
                 <Grid className={classes.featureWrapper} container>
                     <Grid item xs={6}>
                         {props.mileage} Mileage
