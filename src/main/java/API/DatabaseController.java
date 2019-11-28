@@ -141,7 +141,7 @@ public class DatabaseController {
         Document document = new Document("plateNumber",  data.get("plateNumber"))
                 .append("firstName",  data.get("firstName"))
                 .append("lastName",  data.get("lastName"))
-                .append("email",  data.get("email"))
+                .append("phoneNumber",  data.get("phoneNumber"))
                 .append("pickupDate", Date.from(Instant.from(OffsetDateTime.parse((String) data.get("pickupDate"), timeFormatter))))
                 .append("dropOffDate", Date.from(Instant.from(OffsetDateTime.parse((String) data.get("dropOffDate"), timeFormatter))));
         reservationCollection.insertOne(document);

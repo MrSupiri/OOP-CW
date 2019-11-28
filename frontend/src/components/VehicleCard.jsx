@@ -41,50 +41,51 @@ export default function VehicleCard(props) {
     String.prototype.toProperCase = function () {
         return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     };
+    props.vehicle.rent = (props.vehicle.costPerDay * props.days).toFixed(2);
     return (
         <Grid container className={classes.root}>
             <Grid item className={classes.sectionWrapper} xs={2}>
-                <img src={`https://source.unsplash.com/215x150/?${props.vehicleModel.type}`} alt={props.vehicleModel.type} />
+                <img src={`https://source.unsplash.com/215x150/?${props.vehicle.vehicleModel.type}`} alt={props.vehicle.vehicleModel.type} />
             </Grid>
             <Grid item className={classes.sectionWrapper} xs={4}>
-                <span>{props.vehicleModel.type}</span>
-                <h2 className={classes.vehicleModel} >{props.vehicleModel.make} {props.vehicleModel.model}</h2>
-                <span>{props.plateNumber}</span>
+                <span>{props.vehicle.vehicleModel.type}</span>
+                <h2 className={classes.vehicleModel} >{props.vehicle.vehicleModel.make} {props.vehicle.vehicleModel.model}</h2>
+                <span>{props.vehicle.plateNumber}</span>
                 <Grid className={classes.featureWrapper} container>
                     <Grid item xs={6}>
-                        {props.mileage} Mileage
+                        {props.vehicle.mileage} Mileage
                     </Grid>
                     <Grid item xs={6}>
-                        {props.engineCapacity}CC Engine Capacity
+                        {props.vehicle.engineCapacity}CC Engine Capacity
                     </Grid>
                     <Grid item xs={6}>
-                        {props.seats} Seats
+                        {props.vehicle.seats} Seats
                     </Grid>
                     <Grid item xs={6}>
-                        {props.transmission.toProperCase()} Transmission
+                        {props.vehicle.transmission.toProperCase()} Transmission
                     </Grid>
-                    {props.doors ?
+                    {props.vehicle.doors ?
                         <Fragment>
                             <Grid item xs={6}>
-                                {props.doors} Doors
+                                {props.vehicle.doors} Doors
                             </Grid>
                             < Grid item xs={6}>
-                                {props.airConditioned ? "Air Conditioned": "Non Air Conditioned"}
+                                {props.vehicle.airConditioned ? "Air Conditioned": "Non Air Conditioned"}
                             </Grid>
                             <Grid item xs={6}>
-                                {props.trunkCapacity} Bags
+                                {props.vehicle.trunkCapacity} Bags
                             </Grid>
                         </Fragment>
                         :
                         <Fragment>
                             <Grid item xs={6}>
-                                {props.wheelSize}" Wheel Size
+                                {props.vehicle.wheelSize}" Wheel Size
                             </Grid>
                             < Grid item xs={6}>
-                                {props.sideCar ? "Has an Side Car": "No Side Car"}
+                                {props.vehicle.sideCar ? "Has an Side Car": "No Side Car"}
                             </Grid>
                             <Grid item xs={6}>
-                                {props.numOfHelmets} Helmets
+                                {props.vehicle.numOfHelmets} Helmets
                             </Grid>
                         </Fragment>
                     }
@@ -93,8 +94,8 @@ export default function VehicleCard(props) {
             </Grid>
             <Grid item className={classes.sectionWrapper} xs={2}>
                 <span>Price for {props.days} day</span>
-                <h2>EUR {(props.costPerDay * props.days).toFixed(2) }</h2>
-                <Button className={classes.rentButton} onClick={() => null} color="secondary" variant="contained">Rent Now</Button>
+                <h2>EUR  {props.vehicle.rent }</h2>
+                <Button className={classes.rentButton} onClick={() => props.rentAVehicle(props.vehicle)} color="secondary" variant="contained">Rent Now</Button>
             </Grid>
         </Grid>
     );
