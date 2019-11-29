@@ -9,6 +9,7 @@ import Models.VehicleModel;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,8 +20,7 @@ public class ConsoleApp {
 
 
     public static void main(String[] args) {
-        // TODO: Initiate the Manager CLI
-        RentalVehicleManager manager = new WestminsterRentalVehicleManager("123", "Test");
+        RentalVehicleManager manager = promptForCredentials();
         displayMenu();
         int option = promptForInt(">>> ", "Invalid Option");
         while (option != -1){
@@ -240,5 +240,24 @@ public class ConsoleApp {
             value = sc.nextLine().toLowerCase();
         }
         return value.equals("yes");
+    }
+
+    private static RentalVehicleManager promptForCredentials(){
+        System.out.println("Welcome to Westminster RentalVehicle Manager Application");
+        System.out.println("Please Enter your Employee ID and Password to Processed");
+        return login();
+    }
+
+    private static RentalVehicleManager login(){
+        System.out.print("Enter the Employee ID: ");
+        String empID = sc.nextLine();
+        System.out.print("Enter the Password: ");
+        String password = sc.nextLine();
+        try{
+            return new WestminsterRentalVehicleManager(empID, password);
+        }catch (InvalidParameterException e){
+            System.out.println("Invalid Employee ID or Password");
+        }
+        return login();
     }
 }

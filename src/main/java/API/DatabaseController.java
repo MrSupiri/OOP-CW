@@ -19,17 +19,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.*;
 
 public class DatabaseController {
     private MongoCollection<Document> vehicleCollection;
     private MongoCollection<Document> reservationCollection;
+    private MongoCollection<Document> adminsCollection;
     private DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
     public DatabaseController(MongoDatabase database) {
         this.vehicleCollection = database.getCollection("vehicle");
         this.reservationCollection = database.getCollection("reservation");
+        this.adminsCollection = database.getCollection("admin");
     }
 
     public ArrayList<Vehicle> getVehicles() {
@@ -168,5 +171,28 @@ public class DatabaseController {
             }
         });
         return items;
+    }
+
+    public boolean checkCredentials(String empID, String password){
+        return (int) adminsCollection.count(and(
+                eq("empID", empID),
+                eq("password", password)
+        ))  ==  1;
+    }
+
+    public boolean checkSession(String sessionID){
+        return (int) adminsCollection.count(
+                eq("sessionID", sessionID)
+        )  ==  1;
+    }
+
+    public String createNewSession(String empID, String password){
+        if(!checkCredentials(empID, password))
+            throw new InvalidParameterException();
+        String uuid = UUID.randomUUID().toString();
+        adminsCollection.updateOne(and(eq("empID", empID), eq("password", password))
+                , new Document("$set", new Document("sessionID", uuid))
+        );
+        return uuid;
     }
 }

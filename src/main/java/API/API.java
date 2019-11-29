@@ -18,8 +18,6 @@ public class API {
     private static DatabaseController databaseController;
 
     public static void main(String[] args) {
-        String JWT = "Yi0jadyJTTp%@KZ1PEB8d3oK9d!yYv6Y^$tTv&ZnCm2kcaagAZ";
-
         String MONGODB_URI = String.format("mongodb://%s:%s@%s:27017/%s",
                 System.getenv("MONGODB_USER"), System.getenv("MONGODB_PASSWORD"),
                 System.getenv("MONGODB_HOST"), System.getenv("MONGODB_DATABASE"));
@@ -45,10 +43,11 @@ public class API {
         path("/api", () -> {
 
             before("/admin/*", (request, response) -> {
-                if (!request.headers().contains("Authorization") || !request.headers("Authorization").equals(JWT)) {
+                if (!request.headers().contains("Authorization") || !databaseController.checkSession(request.headers("Authorization"))) {
                     halt(401, new Gson().toJson(new ResponseView(null, "Invalid Token!")));
                 }
             });
+            post("/auth/", "application/json", (request, response) -> authenticate(request, response), gson::toJson);
             path("/admin", () -> {
                 get("/vehicle/", "application/json", (request, response) -> getVehicles(request, response), gson::toJson);
                 post("/vehicle/", "application/json", (request, response) -> addVehicle(request, response), gson::toJson);
@@ -177,4 +176,26 @@ public class API {
             return new ResponseView(null, "Something went Wrong");
         }
     }
+
+    private static ResponseView authenticate(Request request, Response response) {
+        response.type("application/json");
+        try {
+            Map data = gson.fromJson(request.body(), Map.class);
+            String empID = (String) data.get("empID");
+            String password = (String) data.get("password");
+            return new ResponseView(databaseController.createNewSession(empID, password), null);
+        } catch (InvalidParameterException e) {
+            response.status(401);
+            return new ResponseView(null, "Invalid Username or Password");
+        } catch (NullPointerException e) {
+            response.status(400);
+            return new ResponseView(null, "Request is missing some key data");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.status(500);
+            return new ResponseView(null, "Something went Wrong");
+        }
+    }
+
+
 }
