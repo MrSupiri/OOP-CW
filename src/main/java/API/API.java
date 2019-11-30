@@ -127,7 +127,7 @@ public class API {
         }
     }
 
-    private static Object updateVehicle(Request request, Response response) {
+    private static ResponseView updateVehicle(Request request, Response response) {
         response.type("application/json");
         deleteVehicle(request, response);
         return addVehicle(request, response);

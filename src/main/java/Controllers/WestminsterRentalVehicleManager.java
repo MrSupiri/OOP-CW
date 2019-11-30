@@ -25,7 +25,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static Gson gson = new Gson();
 
-    private ArrayList<Vehicle> vehicles = new ArrayList<>();
+    private static ArrayList<Vehicle> vehicles = new ArrayList<>();
     private static String sessionToken;
 
     public WestminsterRentalVehicleManager(String empID, String password) {
@@ -47,6 +47,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        fetchVehicles();
     }
 
     @Override
@@ -67,7 +68,34 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
                         ).getSuccess()
                 );
             } else {
-                System.out.printf("Error: %s",
+                System.out.printf("Error: %s\n",
+                        gson.fromJson(Objects.requireNonNull(response.body()).string(), ResponseView.class).getError()
+                );
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateVehicle(Vehicle vehicle){
+        //noinspection deprecation
+        RequestBody body = RequestBody.create(JSON, gson.toJson(vehicle));
+
+        Request request = new Request.Builder()
+                .url(API_ENDPOINT)
+                .patch(body)
+                .addHeader("Authorization", sessionToken)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (response.code() == 200) {
+                System.out.printf("Vehicle was successfully updated on the database, %.0f Slots Left",
+                        MAX_VEHICLES - (double) gson.fromJson(
+                                Objects.requireNonNull(response.body()).string(), ResponseView.class
+                        ).getSuccess()
+                );
+            } else {
+                System.out.printf("Error: %s\n",
                         gson.fromJson(Objects.requireNonNull(response.body()).string(), ResponseView.class).getError()
                 );
             }
@@ -93,7 +121,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
                         ).getSuccess()
                 );
             } else {
-                System.out.printf("Error: %s",
+                System.out.printf("Error: %s\n",
                         gson.fromJson(Objects.requireNonNull(response.body()).string(), ResponseView.class).getError()
                 );
             }
@@ -104,7 +132,10 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
 
     @Override
     public void printVehicle() {
-        fetchVehicles();
+        if(!fetchVehicles()){
+            System.out.println("Reading Vehicles Failed");
+            return;
+        }
         Collections.sort(vehicles);
         System.out.println("+-----+------------------+----------+");
         System.out.println("|  #  |   Plate Number   |   Type   |");
@@ -120,6 +151,10 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
 
     @Override
     public void save() {
+        if(!fetchVehicles()){
+            System.out.println("Writing to Disk Failed");
+            return;
+        }
         StringBuilder content = new StringBuilder();
         for (Vehicle vehicle : vehicles) {
             content.append(vehicle.toString()).append("\n");
@@ -135,7 +170,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         }
     }
 
-    private void fetchVehicles() {
+    private boolean fetchVehicles() {
         Request request = new Request.Builder()
                 .url(API_ENDPOINT)
                 .addHeader("Authorization", sessionToken)
@@ -150,17 +185,20 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
                 Type listType = new TypeToken<ArrayList<Vehicle>>() {
                 }.getType();
                 vehicles = gson.fromJson(Objects.requireNonNull(response.body()).string(), listType);
+                return true;
             }else{
-                System.out.printf("Error: %s",
+                System.out.printf("Error: %s\n",
                         gson.fromJson(Objects.requireNonNull(response.body()).string(), ResponseView.class).getError()
                 );
+                return false;
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    private Vehicle getVehicleByPlateNumber(String plateNumber) {
+    public static Vehicle getVehicleByPlateNumber(String plateNumber) {
         for (Vehicle v : vehicles) {
             if (v.getPlateNumber().equalsIgnoreCase(plateNumber)) {
                 return v;

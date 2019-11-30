@@ -1,0 +1,4 @@
+Bike{plateNumber='ABL-69420', costPerDay=10, vehicleModel={type='Scooter', make='Honda', model='PCX'}, mileage=10.2, engineCapacity=200.0, seats=2, transmission='auto', wheelSize=10.5, sideCar=false, numOfHelmets=2}
+Car{plateNumber='SSS-69420', costPerDay=25.8, vehicleModel={type='Van', make='Toyota', model='Caravan'}, mileage=33.2, engineCapacity=3000.0, seats=15, transmission='manual', doors=3, airConditioned=false, trunkCapacity=4}
+Car{plateNumber='ABC-1189', costPerDay=50.0, vehicleModel={type='Car', make='BMW', model='i8'}, mileage=47.45, engineCapacity=11600.0, seats=2, transmission='Auto', doors=2, airConditioned=true, trunkCapacity=2}
+Car{plateNumber='Test-1111', costPerDay=10.29, vehicleModel={type='Van', make='BMW', model='i8'}, mileage=50.0, engineCapacity=5000.0, seats=5, transmission='Auto', doors=2, airConditioned=true, trunkCapacity=3}

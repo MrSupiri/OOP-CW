@@ -18,7 +18,6 @@ import java.util.Scanner;
 public class ConsoleApp {
     public static Scanner sc = new Scanner(System.in);
 
-
     public static void main(String[] args) {
         System.out.println("Welcome to Westminster RentalVehicle Manager Application");
         System.out.println("Please Enter your Employee ID and Password to Processed");
@@ -26,10 +25,18 @@ public class ConsoleApp {
         RentalVehicleManager manager = promptForCredentials();
         displayMenu();
         int option = promptForInt(">>> ", "Invalid Option");
-        while (option != -1){
-            switch (option){
+        while (option != -1) {
+            switch (option) {
                 case 1:
-                    manager.addVehicle(promptForVehicleInfo());
+                    Vehicle vehicle = promptForVehicleInfo();
+                    if (vehicle != null){
+                        if(WestminsterRentalVehicleManager.getVehicleByPlateNumber(vehicle.getPlateNumber()) != null){
+                            manager.updateVehicle(vehicle);
+                        }
+                        else {
+                            manager.addVehicle(vehicle);
+                        }
+                    }
                     break;
                 case 2:
                     System.out.print("Enter the Plate Number: ");
@@ -60,7 +67,7 @@ public class ConsoleApp {
         System.out.println("\nExisting Gracefully");
     }
 
-    private static void displayMenu(){
+    private static void displayMenu() {
         System.out.println();
         System.out.println(" +---------------------+ ");
         System.out.println(" | 1 | Added Vehicle   |");
@@ -72,7 +79,7 @@ public class ConsoleApp {
         System.out.println(" +---------------------+ ");
     }
 
-    public static Vehicle promptForVehicleInfo(){
+    public static Vehicle promptForVehicleInfo() {
         ArrayList<String> vTypes = new ArrayList<>();
         vTypes.add("Bike");
         vTypes.add("Car");
@@ -85,6 +92,14 @@ public class ConsoleApp {
 
         System.out.print("\tEnter the Plate Number of the Vehicle: ");
         String plateNumber = ConsoleApp.sc.nextLine();
+
+        if (WestminsterRentalVehicleManager.getVehicleByPlateNumber(plateNumber) != null) {
+            System.out.printf("\t\tVehicle with the plate number %s already existing in the database, \n", plateNumber);
+            if (!promptForBoolean("\t\t\t Do you want to replace it ? ", "\t\tInvalid Input! (Yes/No)")) {
+                return null;
+            }
+        }
+
         BigDecimal costPerDay = ConsoleApp.promptForBigDecimal(
                 "\tEnter the Price of the Vehicle for day: ",
                 "Invalid Price !"
@@ -113,7 +128,7 @@ public class ConsoleApp {
         System.out.print("\tEnter the Transmission type of the Vehicle: ");
         String transmission = ConsoleApp.sc.nextLine();
 
-        if(vehicleType.equals("Bike")){
+        if (vehicleType.equals("Bike")) {
             double wheelSize = ConsoleApp.promptForDouble(
                     "\tEnter the WheelSize of the Bike: ",
                     "Invalid wheelSize !"
@@ -128,8 +143,7 @@ public class ConsoleApp {
                     "Invalid Number of Helmets !"
             );
             return new Bike(plateNumber, costPerDay, vehicleModel, mileage, engineCapacity, seats, transmission, wheelSize, sideCar, numOfHelmets);
-        }
-        else{
+        } else {
             int doors = ConsoleApp.promptForPositiveInt(
                     "\tEnter the Number of doors in the Car: ",
                     "Invalid Number of doors !"
@@ -150,6 +164,7 @@ public class ConsoleApp {
 
     /**
      * prompt user till the he enters a Integer Value
+     *
      * @param msg - message that keep promoting to user
      * @param err - error given when user enters a invalid number
      * @return - number user input
@@ -168,7 +183,7 @@ public class ConsoleApp {
 
     public static int promptForPositiveInt(String msg, String error) {
         int value = promptForInt(msg, error);
-        while(value < 0){
+        while (value < 0) {
             System.out.printf("\n\t%s\n\n", error);
             value = promptForInt(msg, error);
         }
@@ -207,7 +222,7 @@ public class ConsoleApp {
             sc.nextLine();
         }
         double value = sc.nextDouble();
-        while(value < 0){
+        while (value < 0) {
             System.out.printf("\n\t\t%s\n\n", err);
             value = promptForDouble(msg, err);
         }
@@ -219,8 +234,8 @@ public class ConsoleApp {
         System.out.print(msg);
         String type = sc.nextLine().toLowerCase();
         while (true) {
-            for (String t: types) {
-                if(t.equalsIgnoreCase(type))
+            for (String t : types) {
+                if (t.equalsIgnoreCase(type))
                     return t;
             }
             System.out.printf("\n\t\t%s\n\n", err);
@@ -232,7 +247,7 @@ public class ConsoleApp {
     public static boolean promptForBoolean(String msg, String err) {
         System.out.print(msg);
         String value = sc.nextLine().toLowerCase();
-        while (!value.equals("yes") && !value.equals("no") ){
+        while (!value.equals("yes") && !value.equals("no")) {
             System.out.printf("\n\t\t%s\n\n", err);
             System.out.print(msg);
             value = sc.nextLine().toLowerCase();
@@ -240,14 +255,14 @@ public class ConsoleApp {
         return value.equals("yes");
     }
 
-    public static RentalVehicleManager promptForCredentials(){
+    public static RentalVehicleManager promptForCredentials() {
         System.out.print("Enter the Employee ID: ");
         String empID = sc.nextLine();
         System.out.print("Enter the Password: ");
         String password = sc.nextLine();
-        try{
+        try {
             return new WestminsterRentalVehicleManager(empID, password);
-        }catch (InvalidParameterException e){
+        } catch (InvalidParameterException e) {
             System.out.println("Invalid Employee ID or Password");
         }
         return promptForCredentials();
