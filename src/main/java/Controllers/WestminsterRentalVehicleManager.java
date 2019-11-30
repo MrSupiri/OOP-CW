@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class WestminsterRentalVehicleManager implements RentalVehicleManager {
-    final static int MAX_VEHICLES = 1000;
+    final static int MAX_VEHICLES = 50;
     private static final String API_ENDPOINT = "http://localhost:4567/api/admin/vehicle/";
     private static OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -28,6 +28,12 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
     private static ArrayList<Vehicle> vehicles = new ArrayList<>();
     private static String sessionToken;
 
+    /**
+     * Initialize the a session with the server using empID and password
+     *
+     * @param empID    - Employee ID
+     * @param password - Employee Password
+     */
     public WestminsterRentalVehicleManager(String empID, String password) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("empID", empID);
@@ -50,6 +56,11 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         fetchVehicles();
     }
 
+    /**
+     * Send Vehicle Object to the API to save it to the database
+     *
+     * @param vehicle - vehicle that need to be added to the database
+     */
     @Override
     public void addVehicle(Vehicle vehicle) {
         //noinspection deprecation
@@ -77,8 +88,13 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         }
     }
 
+    /**
+     * Send Vehicle Object to the API to modify the database
+     *
+     * @param vehicle - vehicle that need to be updated in the database
+     */
     @Override
-    public void updateVehicle(Vehicle vehicle){
+    public void updateVehicle(Vehicle vehicle) {
         //noinspection deprecation
         RequestBody body = RequestBody.create(JSON, gson.toJson(vehicle));
 
@@ -104,6 +120,11 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         }
     }
 
+    /**
+     * Delete a vehicle from the Database using the API
+     *
+     * @param plateNumber - Plate Number number of the vehicle that need to be removed from the database
+     */
     @Override
     public void deleteVehicle(String plateNumber) {
         //noinspection deprecation
@@ -130,9 +151,12 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         }
     }
 
+    /**
+     * Print the List of Vehicles in the Database
+     */
     @Override
     public void printVehicle() {
-        if(!fetchVehicles()){
+        if (!fetchVehicles()) {
             System.out.println("Reading Vehicles Failed");
             return;
         }
@@ -149,9 +173,12 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         System.out.println("+-----+------------------+----------+");
     }
 
+    /**
+     * Save the Vehicle List the this disk
+     */
     @Override
     public void save() {
-        if(!fetchVehicles()){
+        if (!fetchVehicles()) {
             System.out.println("Writing to Disk Failed");
             return;
         }
@@ -170,6 +197,11 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         }
     }
 
+    /**
+     * Fetch all the vehicles in the database
+     *
+     * @return - List of Vehicles
+     */
     private boolean fetchVehicles() {
         Request request = new Request.Builder()
                 .url(API_ENDPOINT)
@@ -186,7 +218,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
                 }.getType();
                 vehicles = gson.fromJson(Objects.requireNonNull(response.body()).string(), listType);
                 return true;
-            }else{
+            } else {
                 System.out.printf("Error: %s\n",
                         gson.fromJson(Objects.requireNonNull(response.body()).string(), ResponseView.class).getError()
                 );
@@ -198,6 +230,12 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         }
     }
 
+    /**
+     * Check and get the Vehicle Object from the Plate Number
+     *
+     * @param plateNumber - Plate Number of the vehicle search for
+     * @return - Vehicle object or none if it's not found
+     */
     public static Vehicle getVehicleByPlateNumber(String plateNumber) {
         for (Vehicle v : vehicles) {
             if (v.getPlateNumber().equalsIgnoreCase(plateNumber)) {

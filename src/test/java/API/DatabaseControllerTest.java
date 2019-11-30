@@ -63,7 +63,7 @@ public class DatabaseControllerTest {
 
     @Test
     public void numOfFreeParkingSlots() {
-        assertTrue(databaseController.numOfFreeParkingSlots() <= 50);
+        assertTrue(databaseController.numOfVehiclesInTheDatabase() <= 50);
     }
 
     @Test

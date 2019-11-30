@@ -79,6 +79,10 @@ public class ConsoleApp {
         System.out.println(" +---------------------+ ");
     }
 
+    /***
+     * Prompt User to get information about the vehicle
+     * @return - new Vehicle Object Created from user Input
+     */
     public static Vehicle promptForVehicleInfo() {
         ArrayList<String> vTypes = new ArrayList<>();
         vTypes.add("Bike");
@@ -167,7 +171,7 @@ public class ConsoleApp {
      *
      * @param msg - message that keep promoting to user
      * @param err - error given when user enters a invalid number
-     * @return - number user input
+     * @return - number user inputted
      */
     public static int promptForInt(String msg, String err) {
         System.out.print(msg);
@@ -181,15 +185,29 @@ public class ConsoleApp {
         return value;
     }
 
-    public static int promptForPositiveInt(String msg, String error) {
-        int value = promptForInt(msg, error);
+    /**
+     * prompt user till the he enters a Positive Integer Value
+     *
+     * @param msg - message that keep promoting to user
+     * @param err - error given when user enters a invalid input
+     * @return - number user inputted
+     */
+    public static int promptForPositiveInt(String msg, String err) {
+        int value = promptForInt(msg, err);
         while (value < 0) {
-            System.out.printf("\n\t%s\n\n", error);
-            value = promptForInt(msg, error);
+            System.out.printf("\n\t%s\n\n", err);
+            value = promptForInt(msg, err);
         }
         return value;
     }
 
+    /**
+     * prompt user till the he enters a Big Decimal Value
+     *
+     * @param msg - message that keep promoting to user
+     * @param err - error given when user enters a invalid input
+     * @return - Big Decimal user inputted
+     */
     public static BigDecimal promptForBigDecimal(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextBigDecimal()) {
@@ -202,6 +220,13 @@ public class ConsoleApp {
         return value;
     }
 
+    /**
+     * prompt user till the he enters a Decimal Value
+     *
+     * @param msg - message that keep promoting to user
+     * @param err - error given when user enters a invalid input
+     * @return - Decimal user inputted
+     */
     public static double promptForDouble(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextDouble()) {
@@ -214,6 +239,13 @@ public class ConsoleApp {
         return value;
     }
 
+    /**
+     * prompt user till the he enters a Positive Decimal Value
+     *
+     * @param msg - message that keep promoting to user
+     * @param err - error given when user enters a invalid input
+     * @return - Positive Decimal user inputted
+     */
     public static double promptForPositiveDouble(String msg, String err) {
         System.out.print(msg);
         while (!sc.hasNextDouble()) {
@@ -230,6 +262,13 @@ public class ConsoleApp {
         return value;
     }
 
+    /**
+     * prompt user till the he enters a one value from the per defines set of Value
+     *
+     * @param msg - message that keep promoting to user
+     * @param err - error given when user enters a invalid input
+     * @return - value user inputted
+     */
     public static String promptForENUM(String msg, String err, List<String> types) {
         System.out.print(msg);
         String type = sc.nextLine().toLowerCase();
@@ -244,6 +283,13 @@ public class ConsoleApp {
         }
     }
 
+    /**
+     * prompt user till the he enters a Yes or Now Value
+     *
+     * @param msg - message that keep promoting to user
+     * @param err - error given when user enters a invalid input
+     * @return - Yes or Now user value inputted
+     */
     public static boolean promptForBoolean(String msg, String err) {
         System.out.print(msg);
         String value = sc.nextLine().toLowerCase();
@@ -255,6 +301,10 @@ public class ConsoleApp {
         return value.equals("yes");
     }
 
+    /***
+     * prompt user for the username and password
+     * @return - RentalVehicleManager with the session token
+     */
     public static RentalVehicleManager promptForCredentials() {
         System.out.print("Enter the Employee ID: ");
         String empID = sc.nextLine();

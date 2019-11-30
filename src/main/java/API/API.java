@@ -18,6 +18,11 @@ public class API {
     private static Gson gson = new Gson();
     private static DatabaseController databaseController;
 
+    /**
+     * Maps the URL patterns respective resolvers
+     *
+     * @param args - Command Line Args
+     */
     public static void main(String[] args) {
         String MONGODB_URI = String.format("mongodb://%s:%s@%s:27017/%s",
                 System.getenv("MONGODB_USER"), System.getenv("MONGODB_PASSWORD"),
@@ -64,6 +69,12 @@ public class API {
         });
     }
 
+    /**
+     * Get the List of Vehicles in the Database
+     *
+     * @param response - response generated from the server
+     * @return List of Vehicles in the Database
+     */
     private static Object getVehicles(Response response) {
         response.type("application/json");
         try {
@@ -75,12 +86,19 @@ public class API {
         }
     }
 
+    /**
+     * Add an Vehicle to the Database
+     *
+     * @param request  - Request sent from the client
+     * @param response - response generated from the server
+     * @return Number of Free Space Left or an error
+     */
     private static ResponseView addVehicle(Request request, Response response) {
         response.type("application/json");
         try {
             Map data = gson.fromJson(request.body(), Map.class);
             databaseController.addVehicle(DatabaseController.createVehicleDocument(data));
-            return new ResponseView(databaseController.numOfFreeParkingSlots(), null);
+            return new ResponseView(databaseController.numOfVehiclesInTheDatabase(), null);
         } catch (OutOfMemoryError e) {
             response.status(400);
             return new ResponseView(null, "Packing lot is full");
@@ -101,6 +119,13 @@ public class API {
         }
     }
 
+    /**
+     * Delete an Vehicle to the Database
+     *
+     * @param request  - Request sent from the client
+     * @param response - response generated from the server
+     * @return Number of Free Space Left or an error
+     */
     private static ResponseView deleteVehicle(Request request, Response response) {
         response.type("application/json");
         try {
@@ -109,7 +134,7 @@ public class API {
                 throw new InvalidParameterException();
             }
             databaseController.deleteVehicle((String) data.get("plateNumber"));
-            return new ResponseView(databaseController.numOfFreeParkingSlots(), null);
+            return new ResponseView(databaseController.numOfVehiclesInTheDatabase(), null);
         } catch (InvalidParameterException e) {
             response.status(404);
             return new ResponseView(null, "Vehicle not found");
@@ -127,12 +152,26 @@ public class API {
         }
     }
 
+    /**
+     * Modify an Vehicle to the Database
+     *
+     * @param request  - Request sent from the client
+     * @param response - response generated from the server
+     * @return Number of Free Space Left or an error
+     */
     private static ResponseView updateVehicle(Request request, Response response) {
         response.type("application/json");
         deleteVehicle(request, response);
         return addVehicle(request, response);
     }
 
+    /**
+     * Make a Reservation for Vehicle
+     *
+     * @param request  - Request sent from the client
+     * @param response - response generated from the server
+     * @return Weather reservation was successful or not
+     */
     private static ResponseView bookVehicle(Request request, Response response) {
         response.type("application/json");
         try {
@@ -160,6 +199,13 @@ public class API {
         }
     }
 
+    /**
+     * Make a Reservation for Vehicle
+     *
+     * @param request  - Request sent from the client
+     * @param response - response generated from the server
+     * @return Weather reservation was successful or not
+     */
     private static Object getAvailableVehicles(Request request, Response response) {
         response.type("application/json");
         try {
@@ -177,6 +223,13 @@ public class API {
         }
     }
 
+    /**
+     * Authenticate a user and generate a session
+     *
+     * @param request  - Request sent from the client
+     * @param response - response generated from the server
+     * @return session taken or an error
+     */
     private static ResponseView authenticate(Request request, Response response) {
         response.type("application/json");
         try {

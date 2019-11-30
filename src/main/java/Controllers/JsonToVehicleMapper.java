@@ -5,6 +5,10 @@ import Models.Car;
 import com.google.gson.*;
 import java.lang.reflect.Type;
 
+/**
+ * Simple Json Deserializer for Vehicle Object
+ * This Map a json response to a Vehicle Object
+ */
 public class JsonToVehicleMapper implements JsonDeserializer {
     @Override
     public Object deserialize(JsonElement jsonElement, Type type,
