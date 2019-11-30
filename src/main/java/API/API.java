@@ -108,7 +108,6 @@ public class API {
             if (data == null) {
                 throw new InvalidParameterException();
             }
-            System.out.println(data);
             databaseController.deleteVehicle((String) data.get("plateNumber"));
             return new ResponseView(databaseController.numOfFreeParkingSlots(), null);
         } catch (InvalidParameterException e) {

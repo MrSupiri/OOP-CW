@@ -19,5 +19,18 @@ services:
       - ../../frontend:/var/www/
     ports:
       - '3000:3000'
+  backend:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    ports:
+      - '4567:4567'
+    depends_on:
+      - westminster_mongodb
+    environment:
+      MONGODB_USER: ${MONGODB_USER}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
+      MONGODB_HOST: westminster_mongodb
+      MONGODB_DATABASE: ${MONGODB_DATABASE}
 volumes:
   westminster_mongodb:
