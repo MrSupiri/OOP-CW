@@ -16,10 +16,13 @@ import java.util.Scanner;
 
 @SuppressWarnings("SameParameterValue")
 public class ConsoleApp {
-    private static Scanner sc = new Scanner(System.in);
+    public static Scanner sc = new Scanner(System.in);
 
 
     public static void main(String[] args) {
+        System.out.println("Welcome to Westminster RentalVehicle Manager Application");
+        System.out.println("Please Enter your Employee ID and Password to Processed");
+
         RentalVehicleManager manager = promptForCredentials();
         displayMenu();
         int option = promptForInt(">>> ", "Invalid Option");
@@ -238,12 +241,6 @@ public class ConsoleApp {
     }
 
     public static RentalVehicleManager promptForCredentials(){
-        System.out.println("Welcome to Westminster RentalVehicle Manager Application");
-        System.out.println("Please Enter your Employee ID and Password to Processed");
-        return login();
-    }
-
-    public static RentalVehicleManager login(){
         System.out.print("Enter the Employee ID: ");
         String empID = sc.nextLine();
         System.out.print("Enter the Password: ");
@@ -253,6 +250,6 @@ public class ConsoleApp {
         }catch (InvalidParameterException e){
             System.out.println("Invalid Employee ID or Password");
         }
-        return login();
+        return promptForCredentials();
     }
 }

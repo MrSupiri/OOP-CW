@@ -23,7 +23,7 @@ public class DatabaseControllerTest {
     private static MongoDatabase database;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         String MONGODB_URI = String.format("mongodb://%s:%s@%s:27017/%s",
                 System.getenv("MONGODB_USER"), System.getenv("MONGODB_PASSWORD"),
                 System.getenv("MONGODB_HOST"), System.getenv("MONGODB_DATABASE"));
@@ -35,7 +35,7 @@ public class DatabaseControllerTest {
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void tearDown() {
         databaseController.deleteVehicle("Test-12345");
         database.getCollection("reservation").deleteMany(eq("plateNumber", "Test-12345"));
         mongoClient.close();

@@ -1,6 +1,0 @@
-Bike{plateNumber='sdfsdfsf', costPerDay=234.34, vehicleModel={type='sdfs', make='Sfdsd', model='Sd'}, mileage=123.2, engineCapacity=234.0, seats=3, transmission='something', wheelSize=3.0, sideCar=false, numOfHelmets=2}
-Bike{plateNumber='sdfsdfsf', costPerDay=234.34, vehicleModel={type='sdfs', make='Sfdsd', model='Sd'}, mileage=123.2, engineCapacity=234.0, seats=3, transmission='something', wheelSize=3.0, sideCar=false, numOfHelmets=2}
-Bike{plateNumber='sdfsdfsf', costPerDay=234.34, vehicleModel={type='sdfs', make='Sfdsd', model='Sd'}, mileage=123.2, engineCapacity=234.0, seats=3, transmission='something', wheelSize=3.0, sideCar=false, numOfHelmets=2}
-Bike{plateNumber='sdfsdfsf', costPerDay=234.34, vehicleModel={type='sdfs', make='Sfdsd', model='Sd'}, mileage=123.2, engineCapacity=234.0, seats=3, transmission='something', wheelSize=3.0, sideCar=false, numOfHelmets=2}
-Car{plateNumber='SSS-69420', costPerDay=25.8, vehicleModel={type='Van', make='Toyota', model='Caravan'}, mileage=33.2, engineCapacity=3000.0, seats=15, transmission='manual', doors=3, airConditioned=false, trunkCapacity=4}
-Bike{plateNumber='ABL-69420', costPerDay=10, vehicleModel={type='Scooter', make='Honda', model='PCX'}, mileage=10.2, engineCapacity=200.0, seats=2, transmission='auto', wheelSize=10.5, sideCar=false, numOfHelmets=2}
