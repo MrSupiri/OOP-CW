@@ -5,6 +5,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {DatePicker} from "@material-ui/pickers";
 import {dateInputHandleChanger} from "../libs/InputHandler"
+import {addDays} from '../libs/DateUtils'
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -22,18 +23,10 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function BookForm(props) {
-    // https://stackoverflow.com/questions/563406/add-days-to-javascript-date
-    Date.prototype.addDays = function(days) {
-        const date = new Date(this.valueOf());
-        date.setDate(date.getDate() + days);
-        return date;
-    };
 
     const classes = useStyles();
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const [pickupDate, setPickUpDate] = useState(today);
-    const [dropOffDate, setDropOffDate] = useState(today.addDays(1));
+    const [pickupDate, setPickUpDate] = useState(props.pickUpDate);
+    const [dropOffDate, setDropOffDate] = useState(props.dropOffDate);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -59,7 +52,7 @@ export default function BookForm(props) {
                     className={classes.time}
                     label="DropOff Date"
                     value={dropOffDate}
-                    minDate={pickupDate ? pickupDate.addDays(1) : new Date().addDays(1)}
+                    minDate={addDays(pickupDate, 1)}
                     format="dd MMMM yyyy"
                     onChange={(date) => {
                         dateInputHandleChanger(date, setDropOffDate)
