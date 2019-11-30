@@ -2,6 +2,7 @@ package Models;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public class Bike extends Vehicle {
     private double wheelSize;
     private boolean sideCar;

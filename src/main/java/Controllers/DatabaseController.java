@@ -1,6 +1,5 @@
-package API;
+package Controllers;
 
-import Controllers.WestminsterRentalVehicleManager;
 import Models.Bike;
 import Models.Car;
 import Models.Vehicle;
@@ -37,13 +36,11 @@ public class DatabaseController {
 
     public ArrayList<Vehicle> getVehicles() {
         ArrayList<Vehicle> items = new ArrayList<>();
-        vehicleCollection.find().forEach((Block<Document>) document -> {
-            items.add(deserializeVehicle(document));
-        });
+        vehicleCollection.find().forEach((Block<Document>) document -> items.add(deserializeVehicle(document)));
         return items;
     }
 
-    public Vehicle deserializeVehicle(Document document) {
+    private Vehicle deserializeVehicle(Document document) {
         Document vehicleModel = (Document) document.get("vehicleModel");
         if (document.getString("type").equalsIgnoreCase("car")) {
             return new Car(
@@ -112,7 +109,7 @@ public class DatabaseController {
     public static Document createVehicleDocument(Map data) throws IllegalArgumentException, NullPointerException, ClassCastException {
         Map vehicleModel = (Map) data.get("vehicleModel");
         Document doc = new Document("plateNumber", data.get("plateNumber"))
-                //.append("costPerDay", new BigDecimal((double) data.get("costPerDay"))) This throws a java.lang.NumberFormatException
+                //.append("costPerDay", new BigDecimal((double) data.get("costPerDay")))  //  This throws a java.lang.NumberFormatException
                 .append("costPerDay", new BigDecimal(String.valueOf(data.get("costPerDay"))))
                 .append("vehicleModel", new Document("type", vehicleModel.get("type"))
                         .append("make", vehicleModel.get("make"))
@@ -120,7 +117,7 @@ public class DatabaseController {
                 )
                 .append("mileage", data.get("mileage"))
                 .append("engineCapacity", data.get("engineCapacity"))
-                .append("seats", (int) Math.round((double) data.get("seats")))
+                .append("seats", (int) Math.round((double) data.get("seats"))) // TODO: Find why I did this weird cast and comment it
                 .append("transmission", data.get("transmission"));
 
         if (data.containsKey("doors")) {
@@ -166,6 +163,7 @@ public class DatabaseController {
         ArrayList<Vehicle> items = new ArrayList<>();
         vehicleCollection.find().forEach((Block<Document>) document -> {
             Vehicle vehicle = deserializeVehicle(document);
+            assert vehicle != null;
             if(isVehicleAvailable(vehicle.getPlateNumber(), pickupDate, dropOffDate)) {
                 items.add(vehicle);
             }

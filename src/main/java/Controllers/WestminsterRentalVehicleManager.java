@@ -1,7 +1,6 @@
 package Controllers;
 
 import API.ResponseView;
-import Models.JsonToVehicleMapper;
 import Models.Vehicle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,7 +19,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class WestminsterRentalVehicleManager implements RentalVehicleManager {
-    public final static int MAX_VEHICLES = 1000;
+    final static int MAX_VEHICLES = 1000;
     private static final String API_ENDPOINT = "http://localhost:4567/api/admin/vehicle/";
     private static OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -33,6 +32,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("empID", empID);
         jsonObject.addProperty("password", password);
+        //noinspection deprecation
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
                 .url("http://localhost:4567/api/auth/")
@@ -51,7 +51,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
 
     @Override
     public void addVehicle(Vehicle vehicle) {
-        ;
+        //noinspection deprecation
         RequestBody body = RequestBody.create(JSON, gson.toJson(vehicle));
 
         Request request = new Request.Builder()
@@ -78,6 +78,7 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
 
     @Override
     public void deleteVehicle(String plateNumber) {
+        //noinspection deprecation
         RequestBody body = RequestBody.create(JSON, gson.toJson(getVehicleByPlateNumber(plateNumber)));
         Request request = new Request.Builder()
                 .url(API_ENDPOINT)

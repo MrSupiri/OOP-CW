@@ -4,7 +4,7 @@ public class ResponseView {
     private Object success = null;
     private Object error = null;
 
-    public ResponseView(Object success, Object error) {
+    ResponseView(Object success, Object error) {
         this.success = success;
         this.error = error;
     }

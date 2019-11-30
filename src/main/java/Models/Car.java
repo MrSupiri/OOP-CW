@@ -2,6 +2,7 @@ package Models;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public class Car extends Vehicle {
     private int doors;
     private boolean airConditioned;

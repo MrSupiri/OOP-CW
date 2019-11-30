@@ -1,20 +1,20 @@
 package Models;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public abstract class Vehicle implements Comparable<Vehicle> {
-    protected String plateNumber;
-    protected BigDecimal costPerDay;
-    protected VehicleModel vehicleModel;
-    protected double mileage;
-    protected double engineCapacity;
-    protected int seats;
-    protected String transmission;
-    protected static int vehicleCount;
+    String plateNumber;
+    BigDecimal costPerDay;
+    VehicleModel vehicleModel;
+    double mileage;
+    double engineCapacity;
+    int seats;
+    String transmission;
+    private static int vehicleCount;
 
-    public Vehicle(String plateNumber, BigDecimal costPerDay, VehicleModel vehicleModel, double mileage, double engineCapacity, int seats, String transmission) {
+    Vehicle(String plateNumber, BigDecimal costPerDay, VehicleModel vehicleModel, double mileage, double engineCapacity, int seats, String transmission) {
         this.plateNumber = plateNumber;
         this.costPerDay = costPerDay;
         this.vehicleModel = vehicleModel;
@@ -41,7 +41,7 @@ public abstract class Vehicle implements Comparable<Vehicle> {
         this.costPerDay = costPerDay;
     }
 
-    public VehicleModel getVehicleModel() {
+    private VehicleModel getVehicleModel() {
         return vehicleModel;
     }
 
@@ -83,21 +83,6 @@ public abstract class Vehicle implements Comparable<Vehicle> {
 
     public static int getVehicleCount() {
         return vehicleCount;
-    }
-
-    public boolean isAvailable(){
-        // TODO: Check Database to find out availability
-        return false;
-    }
-
-    public boolean rentVehicle(Date pickUpDate, Date dropOffDate){
-        return isAvailable();
-        // TODO: Update the availability
-    }
-
-    public BigDecimal getRentValue(Date pickUpDate, Date dropOffDate){
-        // TODO: Find the days between pickUpDate and dropOffDate and return days * costPerDay
-        return null;
     }
 
     @Override

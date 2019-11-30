@@ -1,5 +1,6 @@
 package Models;
 
+@SuppressWarnings("unused")
 public class VehicleModel {
     private String type;
     private String make;
@@ -19,7 +20,7 @@ public class VehicleModel {
         this.type = type;
     }
 
-    public String getMake() {
+    String getMake() {
         return make;
     }
 
@@ -27,7 +28,7 @@ public class VehicleModel {
         this.make = make;
     }
 
-    public String getModel() {
+    String getModel() {
         return model;
     }
 

@@ -1,5 +1,6 @@
 package API;
 
+import Controllers.DatabaseController;
 import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -49,7 +50,7 @@ public class API {
             });
             post("/auth/", "application/json", (request, response) -> authenticate(request, response), gson::toJson);
             path("/admin", () -> {
-                get("/vehicle/", "application/json", (request, response) -> getVehicles(request, response), gson::toJson);
+                get("/vehicle/", "application/json", (request, response) -> getVehicles(response), gson::toJson);
                 post("/vehicle/", "application/json", (request, response) -> addVehicle(request, response), gson::toJson);
                 put("/vehicle/", "application/json", (request, response) -> addVehicle(request, response), gson::toJson);
                 patch("/vehicle/", "application/json", (request, response) -> updateVehicle(request, response), gson::toJson);
@@ -63,7 +64,7 @@ public class API {
         });
     }
 
-    private static Object getVehicles(Request request, Response response) {
+    private static Object getVehicles(Response response) {
         response.type("application/json");
         try {
             return databaseController.getVehicles();
