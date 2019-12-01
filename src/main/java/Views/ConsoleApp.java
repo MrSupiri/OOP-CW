@@ -47,6 +47,7 @@ public class ConsoleApp {
                     manager.printVehicle();
                     break;
                 case 4:
+                    System.out.println("Saving Vehicle List to the Disk");
                     manager.save();
                     break;
                 case 5:

@@ -127,8 +127,10 @@ public class WestminsterRentalVehicleManager implements RentalVehicleManager {
      */
     @Override
     public void deleteVehicle(String plateNumber) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("plateNumber", plateNumber);
         //noinspection deprecation
-        RequestBody body = RequestBody.create(JSON, gson.toJson(getVehicleByPlateNumber(plateNumber)));
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
                 .url(API_ENDPOINT)
                 .delete(body)
